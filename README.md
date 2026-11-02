@@ -1,36 +1,26 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Candor
 
-## Getting Started
+Resume analyzer and builder: analyze, improve, build and tailor resumes in one workspace. Next.js 16 (App Router), TypeScript, Tailwind 4, shadcn/ui on Base UI, Zustand, React Hook Form + Zod, Motion, Sonner.
 
-First, run the development server:
+## Run
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev          # http://localhost:3000
+npm run build && npm start
+npx tsx scripts/check-services.ts   # self-check for the analysis services
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Log in with any valid email and an 8+ character password to open the sample workspace (Alex Morgan, four resumes). Sign up instead to start with an empty workspace and the onboarding flow.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## How it fits together
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `lib/services/`: local "AI". `parser.ts` (PDF via pdf.js, DOCX via mammoth, then sectioning), `analyzer.ts` (seven weighted categories, findings), `matcher.ts` (job description matching), `writer.ts` (rewrites, summaries, bullets). Pure and deterministic, so any of them can be swapped for an API call without touching the UI.
+- `lib/store.ts`: one Zustand store persisted to localStorage (`candor-v1`), seeded from `lib/data/seed.ts`. Resumes, versions, reports, job matches, activity and settings all live here.
+- `components/resume/document.tsx`: the eight templates. The same component renders the editor preview, gallery thumbnails and the PDF export (`lib/print.tsx`, via the browser's print dialog).
+- `components/editor/`: section editors shared by the editor and the 9-step builder.
+- `lib/config.ts`: templates, pricing, plan limits, section metadata.
 
-## Learn More
+## Not real yet
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Authentication, payments, email and storage are simulated in the browser. AI output is rule-based. See `PRODUCT.md` for product rules (no invented skills or results, suggestions never overwrite silently).

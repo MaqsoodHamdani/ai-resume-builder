@@ -1,9 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  cacheComponents: true,
-  partialPrefetching: true,
+  // Everything reads from browser storage, so prerendered shells buy nothing here.
   turbopack: {
     rules: {
       "*.css": {
